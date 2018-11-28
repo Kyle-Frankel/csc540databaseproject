@@ -1,0 +1,62 @@
+#logo_id {
+    padding-top: 40px;
+}
+
+
+.container{
+    background-color: white;
+    border: black 2px solid;
+    width: 70%;
+    margin-top: 50px;
+    padding-bottom: 100px;
+    max-height: 1300px;
+
+}
+
+
+.nav-pills {
+    padding-bottom: 1px;
+
+}
+
+.nav>li>a.active {
+    background-color: gray;
+}
+
+
+.nav-pills a{
+    color: black;
+
+}
+
+.nav>li>a:hover,.nav>li>a:visited {
+    background-color: gray;
+}
+
+
+li {
+
+
+}
+
+
+body {
+    background-color: white;
+    background-size: cover;
+    border-bottom: hidden;
+
+}
+
+
+
+
+
+#welcome-row {
+    text-align: center;
+
+}
+
+#info-div {
+    position: relative;
+    bottom: 90px;
+}
