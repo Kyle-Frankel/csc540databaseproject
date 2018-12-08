@@ -10,13 +10,6 @@ if ($conn->connect_error) {
 }
 
 session_start();
-
-if (isset($_SESSION['username'])) {
-    $username = $_SESSION['username'];
-    $welcome_message = "Welcome {$_SESSION['username']}";
-    echo ($welcome_message);
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -34,19 +27,31 @@ if (isset($_SESSION['username'])) {
     <div class="container">
         <nav class="navbar fixed-top navbar-dark bg-dark">
             <span class="navbar-brand"><img src="../images/sperts.png" width="45" height="45">Sports and more</span>
+            <form>
+                <?php if (isset($_SESSION['username'])) {
+                $username = $_SESSION['username'];
+                $welcome_message = "Welcome {$_SESSION['username']}";
+                echo ($welcome_message);
+                }?>
+            </form>
 
-                 <form action="customer_category_selection.php" method="POST" >
+                 <form action="customer_home.php" method="POST" >
                      <select name="category_selector" onchange="this.form.submit()">
                         <?php
                             $sql = "SELECT cat_name FROM category";
                             $res = mysqli_query($conn, $sql);
                             $conn->close();
+                                echo "<option selected disabled hidden>Category</option>";
                             while ($row = mysqli_fetch_assoc($res)){
-                                echo "<option class='dropdown-item' href='#'>".$row['cat_name']."</option>";
+                                echo "<option class='dropdown_item' href='#'>".$row['cat_name']."</option>";
                                 }
                         ?>
                      </select>
                  </form>
+
+                <form>
+                    <img src="../images/cart.png" width="45" height="45">
+                </form>
 
             <form>
                 <button type="button" id="review_button" value="Logout" onclick="window.location.href='customer_order_review.php'">Review orders</button>
@@ -62,7 +67,61 @@ if (isset($_SESSION['username'])) {
         <?php echo $welcome_message?>
     </div>
 
-    <div id="items">Your items will be listed here</div>
+    <div class="table-responsive">
+        <h3 align="center"></h3><br />
+        <div id="live_data"></div>
+    </div>
+
+    <?php
+
+    $newConnection1 = new DbHandler();
+    $conn2 = $newConnection1->getConnection();
+
+    if (isset($_POST["category_selector"])) {
+        $category_name = $_POST["category_selector"];
+
+
+        $sql = "SELECT item_name, item_price, item_stock, item_id FROM item NATURAL JOIN category WHERE cat_name = '$category_name'";
+        $res = mysqli_query($conn2, $sql);
+        $conn2->close();
+
+        echo (' 
+      <div class="table-responsive">
+      <form action="POST">
+           <table class="table table-bordered">  
+                <tr>  
+                     <th width="25%">Item Name</th>  
+                     <th width="25%">Price</th>  
+                     <th width="25%">Quantity Available</th> 
+                     <th width="25%">To order</th>   
+                </tr>');
+
+        while ($row = mysqli_fetch_assoc($res)){
+            echo("
+                <tr>
+                    <td class='item_name' data-id1='".$row['item_id']."'>".$row['item_name']."</td>
+                    <td class='item_price' data-id2='".$row['item_id']."'>$".$row['item_price']."</td>
+                    <td class='item_stock' data-id3='".$row['item_id']."'>".$row['item_stock']."</td>
+                    <td class='order_amount' data-id4='".$row['item_id']."'><input type='text' placeholder='Enter quantity'></td>
+                </tr>
+              ");
+        }
+
+        echo("
+            </table>
+            <input type='submit' value='Add to cart'>
+            </form>
+        </div>
+");
+
+    } else {
+        $category_name = null;
+        echo "Select a catagory";
+    }
+
+
+
+    ?>
 
 
 
