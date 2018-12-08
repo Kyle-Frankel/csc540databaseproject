@@ -54,7 +54,7 @@ session_start();
                 </form>
 
             <form>
-                <button type="button" id="review_button" value="Logout" onclick="window.location.href='customer_order_review.php'">Review orders</button>
+                <button type="button" id="review_button" value="review_order" onclick="window.location.href='customer_order_review.php'">Review orders</button>
             </form>
 
             <form>
@@ -87,31 +87,21 @@ session_start();
 
         echo (' 
       <div class="table-responsive">
-      <form action="add_to_cart.php" method="POST">
-           <table class="table table-bordered">  
-                <tr>  
-                     <th width="25%">Item Name</th>  
-                     <th width="25%">Price</th>  
-                     <th width="25%">In stock</th> 
-                     <th width="25%">Quantity to order</th>   
-                </tr>');
+      ');
 
 
         while ($row = mysqli_fetch_assoc($res)){
             echo("
-                <tr>
-                    <td class='item_name'>".$row['item_name']."</td>
-                    <td class='item_price'>$".$row['item_price']."</td>
-                    <td class='item_stock'>Qty: ".$row['item_stock']."</td>
-                    <td class='order_amount'><input type='number' name='quantity' min='0' max='".$row['item_stock']."'placeholder='0'><input type='hidden' name='id' value='".$row['item_id']."'><input type='submit' value='Add to cart'></td>
-                </tr>
+                <form action='add_to_cart.php' method='POST'>
+                    <div class='item_name'>".$row['item_name']."</div>
+                    <div class='item_price'>$".$row['item_price']."</div>
+                    <div class='item_stock'>Qty: ".$row['item_stock']."</div>
+                    <div class='order_amount'><input type='number' name='quantity' min='0' max='".$row['item_stock']."'placeholder='0'><input type='hidden' name='id' value='".$row['item_id']."'><input type='submit' value='Add to cart'></div>
+                </form>
               ");
         }
 
-        echo("
-            </table>
-            
-            </form>
+        echo("         
         </div>
 ");
 
