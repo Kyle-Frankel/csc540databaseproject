@@ -87,29 +87,30 @@ session_start();
 
         echo (' 
       <div class="table-responsive">
-      <form action="POST">
+      <form action="add_to_cart.php" method="POST">
            <table class="table table-bordered">  
                 <tr>  
                      <th width="25%">Item Name</th>  
                      <th width="25%">Price</th>  
-                     <th width="25%">Quantity Available</th> 
-                     <th width="25%">To order</th>   
+                     <th width="25%">In stock</th> 
+                     <th width="25%">Quantity to order</th>   
                 </tr>');
+
 
         while ($row = mysqli_fetch_assoc($res)){
             echo("
                 <tr>
-                    <td class='item_name' data-id1='".$row['item_id']."'>".$row['item_name']."</td>
-                    <td class='item_price' data-id2='".$row['item_id']."'>$".$row['item_price']."</td>
-                    <td class='item_stock' data-id3='".$row['item_id']."'>".$row['item_stock']."</td>
-                    <td class='order_amount' data-id4='".$row['item_id']."'><input type='text' placeholder='Enter quantity'></td>
+                    <td class='item_name'>".$row['item_name']."</td>
+                    <td class='item_price'>$".$row['item_price']."</td>
+                    <td class='item_stock'>Qty: ".$row['item_stock']."</td>
+                    <td class='order_amount'><input type='number' name='quantity' min='0' max='".$row['item_stock']."'placeholder='0'><input type='hidden' name='id' value='".$row['item_id']."'><input type='submit' value='Add to cart'></td>
                 </tr>
               ");
         }
 
         echo("
             </table>
-            <input type='submit' value='Add to cart'>
+            
             </form>
         </div>
 ");
