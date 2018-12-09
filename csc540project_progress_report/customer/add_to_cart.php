@@ -64,6 +64,9 @@ foreach($_SESSION['cart'] AS $arrayIndex){
 
 }
 echo("<div>TOTAL: $".$total."</div>");
-echo'<button onclick="history.go(-1);">Continue shopping</button><button onclick="#">Checkout</button>';
-
+echo'
+        <div><button onclick="history.go(-1)">Continue shopping</button></div>
+        <div><button value="Complete Order" onclick=window.location.href="complete_order.php">Complete Order</button></div>
+        <div><button value="Empty Cart" onclick=window.location.href="complete_order.php">Empty Cart</button></div>
+'
 ?>

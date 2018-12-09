@@ -1,3 +1,11 @@
+<?php
+require "../connect/database.php";
+require "../connect/DbHandler.php";
+header('Cache-Control: no cache');
+session_cache_limiter('private_no_expire');
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 
@@ -24,6 +32,19 @@
     <form>
         <button type="button" id="review_button" value="Logout" onclick="window.location.href='customer_home.php'">Back</button>
     </form>
+
+<?php
+$user_id = $_SESSION['userid'];
+
+$sql = "SELECT order_id, item_name, quantity, date FROM customer NATURAL JOIN customer_order NATURAL JOIN order_details NATURAL JOIN item
+where customer_id = '$user_id' GROUP BY order_id";
+
+$newConnection = new DbHandler();
+$conn = $newConnection->getConnection();
+
+$res = mysqli_query($conn,$sql);
+
+?>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
