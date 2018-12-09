@@ -1,6 +1,8 @@
 <?PHP
 require "../connect/database.php";
 require "../connect/DbHandler.php";
+header('Cache-Control: no cache');
+session_cache_limiter('private_no_expire');
 session_start();
 
 if(empty($_SESSION['cart'])) {
@@ -37,25 +39,31 @@ $conn = $newConnection->getConnection();
 if ($conn->connect_error) {
     die("Connection Failed: " . $conn->connect_error);
 }
-
+$total = 0;
 foreach($_SESSION['cart'] AS $arrayIndex){
     foreach($arrayIndex AS $id=>$qty) {
         $sql_name = "SELECT item_name FROM item WHERE item_id = '$id'";
         $res_name = mysqli_query($conn, $sql_name);
         $row_name = mysqli_fetch_assoc($res_name);
+        $name = $row_name['item_name'];
         $sql_price = "SELECT item_price FROM item WHERE item_id = '$id'";
         $res_price = mysqli_query($conn, $sql_price);
         $row_price = mysqli_fetch_assoc($res_price);
+        $price = $row_price['item_price'];
+        $price_per_item = $price * $qty;
+        $total += $price_per_item;
         echo("
-            <div>Item name: ".$row_name['item_name']."</div>
-            <div>Price: $".$row_price['item_price']."</div>
-            <div>Qty: ".$qty."</div><br>
+            <div>Item name: ".$name."</div>
+            <div>Price: $".$price."</div>
+            <div>Qty: ".$qty."</div>
+            <div>Subtotal: $".$price_per_item."</div><br>
 
         ");
+
     }
 
 }
-
+echo("<div>TOTAL: $".$total."</div>");
 echo'<button onclick="history.go(-1);">Continue shopping</button><button onclick="#">Checkout</button>';
 
 ?>
