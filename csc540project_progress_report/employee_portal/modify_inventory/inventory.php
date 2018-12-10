@@ -37,7 +37,7 @@ $user = $_SESSION['username'];
                     <li><a href="misc_cat.php">Miscellaneous</a></li>
                 </ul>
             </li>
-            <li><a href=""><span class="glyphicon glyphicon-shopping-cart"></span> Manage Orders</a></li>
+            <li><a href="../manage_order/order_management.php"><span class="glyphicon glyphicon glyphicon-search"></span> Review Orders</a></li>
             <li><a href="../login/logout.php"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
         </ul>
     </div>

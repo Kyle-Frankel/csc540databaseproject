@@ -1,27 +1,18 @@
 <?php
 session_start();
-
-
 require "../connect/database.php";
 require "../connect/DbHandler.php";
-
 $newConnection = new DbHandler();
 $conn = $newConnection->getConnection();
-
 if ($conn->connect_error) {
     die("Connection Failed: " . $conn->connect_error);
 }
-
-
 if (isset($_POST["category_selector"])) {
     $category_name = $_POST["category_selector"];
-
-
-$sql = "SELECT item_name, item_price, item_stock, item_id FROM item NATURAL JOIN category WHERE cat_name = '$category_name'";
-$res = mysqli_query($conn, $sql);
-$conn->close();
-
-echo (' 
+    $sql = "SELECT item_name, item_price, item_stock, item_id FROM item NATURAL JOIN category WHERE cat_name = '$category_name'";
+    $res = mysqli_query($conn, $sql);
+    $conn->close();
+    echo (' 
       <div class="table-responsive">  
            <table class="table table-bordered">  
                 <tr>  
@@ -30,7 +21,6 @@ echo ('
                      <th width="25%">Quantity Available</th> 
                      <th width="25%">To order</th>   
                 </tr>');
-
     while ($row = mysqli_fetch_assoc($res)){
         echo("
                 <tr>
@@ -41,19 +31,14 @@ echo ('
                 </tr>
               ");
     }
-
-echo("
+    echo("
             </table>
         </div>
 ");
-
 } else {
     $category_name = null;
     echo "No category name was supplied";
 }
-
-
-
 ?>
 
 <html>

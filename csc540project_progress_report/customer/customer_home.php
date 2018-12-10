@@ -1,14 +1,13 @@
 <?php
 require "../connect/database.php";
 require "../connect/DbHandler.php";
-
 $newConnection = new DbHandler();
 $conn = $newConnection->getConnection();
-
 if ($conn->connect_error) {
     die("Connection Failed: " . $conn->connect_error);
 }
-
+header('Cache-Control: no cache');
+session_cache_limiter('private_no_expire');
 session_start();
 ?>
 
@@ -24,74 +23,65 @@ session_start();
 
 <body>
 
-    <div class="container">
-        <nav class="navbar fixed-top navbar-dark bg-dark">
-            <span class="navbar-brand"><img src="../images/sperts.png" width="45" height="45">Sports and more</span>
-            <div>
-                <?php if (isset($_SESSION['username'])) {
+<div class="container">
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand"><img src="../images/sperts.png" width="45" height="45">Sports and more</span>
+        <div id="welcome">
+            <?php if (isset($_SESSION['username'])) {
                 $username = $_SESSION['username'];
                 $welcome_message = "Welcome {$_SESSION['username']}";
                 echo ($welcome_message);
-                }?>
-            </div>
+            }?>
+        </div>
 
-                 <form action="customer_home.php" method="POST" >
-                     <select name="category_selector" onchange="this.form.submit()">
-                        <?php
-                            $sql = "SELECT cat_name FROM category";
-                            $res = mysqli_query($conn, $sql);
-                            $conn->close();
-                                echo "<option selected disabled hidden>Category</option>";
-                            while ($row = mysqli_fetch_assoc($res)){
-                                echo "<option class='dropdown_item' href='#'>".$row['cat_name']."</option>";
-                                }
-                        ?>
-                     </select>
-                 </form>
+        <form action="customer_home.php" method="POST" >
+            <select name="category_selector" onchange="this.form.submit()">
+                <?php
+                $sql = "SELECT cat_name FROM category";
+                $res = mysqli_query($conn, $sql);
+                $conn->close();
+                echo "<option selected disabled hidden>Category</option>";
+                while ($row = mysqli_fetch_assoc($res)){
+                    echo "<option class='dropdown_item' href='#'>".$row['cat_name']."</option>";
+                }
+                ?>
+            </select>
+        </form>
 
-                <div>
-                    <img src="../images/cart.png" width="45" height="45">
-                </div>
+        <div id="cart_pic">
+            <img src="../images/cart.png" width="45" height="45">
+        </div>
 
-            <div>
-                <button type="button" id="review_button" value="review_order" onclick="window.location.href='customer_order_review.php'">Review orders</button>
-            </div>
+        <div>
+            <button type="button" id="review_button" value="review_order" onclick="window.location.href='customer_order_review.php'">Review orders</button>
+        </div>
 
-            <div>
-                <button type="button" id="logout_button" value="Logout" onclick="window.location.href='customer_logout.php'">Logout</button>
-            </div>
-        </nav>
-    </div>
-
-    <div id="welcome">
-        <?php echo $welcome_message?>
-    </div>
-
-    <div class="table-responsive">
-        <h3 align="center"></h3><br />
-        <div id="live_data"></div>
-    </div>
-
-    <?php
-
-    $newConnection1 = new DbHandler();
-    $conn2 = $newConnection1->getConnection();
-
-    if (isset($_POST["category_selector"])) {
-        $category_name = $_POST["category_selector"];
+        <div>
+            <button type="button" id="logout_button" value="Logout" onclick="window.location.href='customer_logout.php'">Logout</button>
+        </div>
+    </nav>
+</div>
 
 
-        $sql = "SELECT item_name, item_price, item_stock, item_id FROM item NATURAL JOIN category WHERE cat_name = '$category_name'";
-        $res = mysqli_query($conn2, $sql);
-        $conn2->close();
 
-        echo (' 
+<div class="table-responsive">
+    <h3 align="center"></h3><br />
+    <div id="live_data"></div>
+</div>
+
+<?php
+$newConnection1 = new DbHandler();
+$conn2 = $newConnection1->getConnection();
+if (isset($_POST["category_selector"])) {
+    $category_name = $_POST["category_selector"];
+    $sql = "SELECT item_name, item_price, item_stock, item_id FROM item NATURAL JOIN category WHERE cat_name = '$category_name'";
+    $res = mysqli_query($conn2, $sql);
+    $conn2->close();
+    echo (' 
       <div class="table-responsive">
       ');
-
-
-        while ($row = mysqli_fetch_assoc($res)){
-            echo("
+    while ($row = mysqli_fetch_assoc($res)){
+        echo("
                 <form action='add_to_cart.php' method='POST'>
                         <div class='item_name'>".$row['item_name']."</div>
                         <div class='item_price'>$".$row['item_price']."</div>
@@ -99,20 +89,15 @@ session_start();
                         <div class='order_amount'><input type='number' name='quantity' min='0' max='".$row['item_stock']."'placeholder='0'><input type='hidden' name='id' value='".$row['item_id']."'><input type='submit' value='Add to cart'></div>
                 </form>
               ");
-        }
-
-        echo("         
+    }
+    echo("         
         </div>
 ");
+} else {
+    $category_name = null;
 
-    } else {
-        $category_name = null;
-        echo "Select a catagory";
-    }
-
-
-
-    ?>
+}
+?>
 
 
 
@@ -127,4 +112,3 @@ session_start();
 
 
 </html>
-
