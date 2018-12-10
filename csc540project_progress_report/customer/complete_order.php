@@ -24,6 +24,7 @@ if ($conn->query($sql_create_order) === TRUE) {
         }
     }
     echo "Congratulations, your order has been submitted";
+    $conn->close();
     $_SESSION['cart'] = array();
 } else {
     echo "Error inserting data" . $sql_create_order ."<br>".$conn->error;

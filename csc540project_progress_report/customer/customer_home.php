@@ -95,6 +95,9 @@ if (isset($_POST["category_selector"])) {
 ");
 } else {
     $category_name = null;
+    echo("
+        <div>Select a category</div>
+    ");
 
 }
 ?>

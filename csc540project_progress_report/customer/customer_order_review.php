@@ -35,12 +35,27 @@ session_start();
 
 <?php
 $user_id = $_SESSION['userid'];
-$sql = "SELECT order_id, item_name, quantity, date FROM customer NATURAL JOIN customer_order NATURAL JOIN order_details NATURAL JOIN item
-where customer_id = '$user_id' GROUP BY order_id";
+$sql = "SELECT order_id, item_name, quantity, order_date FROM customer NATURAL JOIN customer_order NATURAL JOIN order_details NATURAL JOIN item
+where customer_id = $user_id GROUP BY order_id";
 $newConnection = new DbHandler();
 $conn = $newConnection->getConnection();
 $res = mysqli_query($conn,$sql);
+$conn->close();
+
+while ($row = mysqli_fetch_assoc($res)){
+    echo("
+            <div class='order_id'>Order #: ".$row['order_id']."</div>
+            <div class='order_date'>Order #: ".$row['order_date']."</div>
+            <div class='item_name'>Item name: ".$row['item_name']."</div>
+            <div class='quantity'>Qty ordered: ".$row['quantity']."</div>
+            <br>
+                     
+    ");
+}
+
 ?>
+
+<div><button value="Home" onclick=window.location.href="customer_home.php">Home</button></div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
